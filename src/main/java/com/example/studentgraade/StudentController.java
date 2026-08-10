@@ -2,10 +2,10 @@ package com.example.studentgraade;
 
 import java.util.List;
 
-import jakarta.websocket.server.PathParam;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+@RestController
+@RequestMapping("/students")
 public class StudentController {
 
     private final StudentService studentService;
@@ -15,18 +15,16 @@ public class StudentController {
     }
 
     @GetMapping
-    public List<Student> findAll() {
-        return studentService.findAll();
+    public List<Student> findAll(@RequestParam(required = false)Integer minScore) {
+        if (minScore == null) {
+            return studentService.findAll();
+        }
+        return studentService.findByMinScore(minScore);
     }
 
     @GetMapping("/{id}")
     public Student findById(@PathVariable Long id) {
         return studentService.findById(id);
-    }
-
-    @GetMapping
-    public List<Student> findByMinScore(@RequestParam int minScore) {
-        return studentService.findByMinScore(minScore);
     }
 
     @PostMapping
@@ -39,7 +37,7 @@ public class StudentController {
         return studentService.update(id, newInfo);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         studentService.delete(id);
     }
