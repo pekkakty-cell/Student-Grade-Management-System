@@ -1,7 +1,6 @@
 package com.example.studentgraade;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -52,9 +51,18 @@ public class StudentService {
         return result;
     }
 
+
     public List<Student> getRanking() {
         List<Student> all = studentRepository.findAll();
-        all.sort(Comparator.comparingDouble(this::calculateAverage).reversed());
+        for (int i = 0; i < all.size(); i++) {
+            for (int j = 0; j < all.size() - 1 - i; j++) {
+                if (calculateAverage(all.get(j)) < calculateAverage(all.get(j + 1))) {
+                    Student temp = all.get(j);
+                    all.set(j, all.get(j + 1));
+                    all.set(j + 1, temp);
+                }
+            }
+        }
         return all;
     }
 
