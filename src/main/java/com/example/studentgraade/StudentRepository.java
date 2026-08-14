@@ -9,6 +9,7 @@ public class StudentRepository {
 
     private List<Student> students = new ArrayList<>();
     private Long nextId = 1L;
+    //  1 증가
 
     public List<Student> findAll(){
         return students;
@@ -30,6 +31,14 @@ public class StudentRepository {
     }
 
     public void deleteById(Long id) {
-        students.removeIf(s -> s.getId().equals(id));
+        Student target = null;
+        for (Student s : students) {
+            if (s.getId().equals(id)) {
+                target = s;
+            }
+        }
+        if (target != null) {
+            students.remove(target);
+        }
     }
 }
